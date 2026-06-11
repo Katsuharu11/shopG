@@ -1,0 +1,81 @@
+from django.db import models
+
+class User(models.Model):
+    class Meta:
+        # テーブル名定義
+        db_table = "account_user"
+
+    # テーブルフィールド定義
+    user_id  = models.CharField(verbose_name="会員ID", max_length=128,primary_key=True)
+    password = models.CharField(verbose_name="パスワード", max_length=256)
+    name = models.CharField(verbose_name="名前", max_length=128)
+    address = models.CharField(verbose_name="住所", max_length=256)
+    
+class Category(models.Model):
+    class Meta:
+        # テーブル名定義
+        db_table = "shopping_category"
+
+    # テーブルフィールド定義
+    category_id = models.IntegerField(verbose_name="カテゴリID",primary_key=True)
+    name = models.CharField(verbose_name="カテゴリ名", max_length=256)
+    
+
+class Item(models.Model):
+    class Meta:
+        # テーブル名定義
+        db_table = "shopping_item"
+
+    # テーブルフィールド定義
+    item_id = models.IntegerField(verbose_name="商品ID",primary_key=True)
+    name = models.CharField(verbose_name="商品名", max_length=128)
+    manufacturer = models.CharField(verbose_name="メーカー名", max_length=32)
+    color = models.CharField(verbose_name="商品の色", max_length=16)
+    price = models.IntegerField(verbose_name="価格")
+    stock = models.IntegerField(verbose_name="在庫数")
+    recommmended = models.BooleanField(verbose_name="おすすめ",default=False)
+    category_id = models.ForeignKey(Category,verbose_name="カテゴリID",on_delete=models.CASCADE)
+  
+
+class ShoppingCart(models.Model):
+    class Meta:
+        # テーブル名定義
+        db_table = "shopping_itemincart"
+
+    # テーブルフィールド定義
+    amount = models.IntegerField(verbose_name="数量")
+    booked_date = models.DateField(verbose_name="登録日",auto_now_add=True)
+    item_id = models.ForeignKey(Item,verbose_name="商品ID",on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User,verbose_name="会員ID", max_length=128,on_delete=models.CASCADE)
+
+class Purchase(models.Model):
+    class Meta:
+        # テーブル名定義
+        db_table = "shopping_purchase"
+
+    # テーブルフィールド定義
+    purchase_id = models.IntegerField(verbose_name="注文ID",primary_key=True)
+    destination = models.CharField(verbose_name="配送先", max_length=256)
+    booked_date = models.DateField(verbose_name="注文日",auto_now_add=True)
+    cancel = models.BooleanField(verbose_name="キャンセル",default=False)
+    user_id = models.ForeignKey(User,verbose_name="注文者", max_length=128,on_delete=models.CASCADE)
+
+class PurchaseDetail(models.Model):
+    class Meta:
+        # テーブル名定義
+        db_table = "shopping_purchasedetail"
+
+    # テーブルフィールド定義
+    purchase_detail_id = models.IntegerField(verbose_name="注文詳細ID",primary_key=True)
+    amount = models.IntegerField(verbose_name="注文数")
+    item_id = models.ForeignKey(Item,verbose_name="商品ID",on_delete=models.CASCADE)
+    purchase_id = models.ForeignKey(Purchase,verbose_name="注文ID",on_delete=models.CASCADE)
+
+class Admin(models.Model):
+    class Meta:
+        # テーブル名定義
+        db_table = "administrator_admin"
+
+    # テーブルフィールド定義
+    admin_id  = models.CharField(verbose_name="管理者ID", max_length=128,primary_key=True)
+    password = models.CharField(verbose_name="パスワード", max_length=256)

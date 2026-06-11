@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+    <title>商品検索</title>
+    <link rel='stylesheet' type='text/css' href='{% static "insta/css/style.css" %}' />
+</head>
+
+<body>
+    <h2>商品の検索を行います</h2>
+    <form action="{% url 'smartshop:registerUserCommit' %}" method="post">
+        カテゴリ：<select name="btype">
+        <option value="A"selected>すべて</option>
+        <option value="A">食料</option>
+        <option value="B">衣類</option>
+        <option value="O" >電化製品</option>
+        <option value="AB">日用品</option>
+        </select>
+        キーワード：<input type="text" name="keyword" size="40">
+        <input type="submit" value="検索">
+
+    </form>
+        <a href="{% url 'smartshop:cart' %}">ショッピングカートを見る</a><br>
+        <a href="{% url 'smartshop:cart' %}">購入履歴（任意機能）</a><br>
+        <a href="{% url 'smartshop:login' %}">ログイン</a><br>
+        <a href="{% url 'smartshop:login' %}">管理者ページ</a><br>
+
+</body>
+
+</html>
