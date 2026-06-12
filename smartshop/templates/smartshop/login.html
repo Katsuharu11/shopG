@@ -1,0 +1,39 @@
+{% load static %}
+<html>
+	<head>
+		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+		<title>会員ログイン</title>
+		<link rel='stylesheet' type='text/css' href='{% static "insta/css/style.css" %}' />
+	</head>
+	<body>
+        <div class="content">
+			<h3>ログインしてください</h3>
+			<div class="form">
+            <form action="{% url 'smartshop:login'%}" method='POST'>
+				{% csrf_token %}
+
+
+				{% if form.non_field_errors %}
+				<p class="error">{{ form.non_field_errors.0 }}</p>
+			    {% endif %}
+		
+
+
+				{% for field in form %}
+                <div>
+					
+					{{ field.label }}
+                	{{ field }}
+                    
+                    {% if field.errors %}
+                    	<p class="error">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+				{% endfor %}
+
+                <input type="submit" value="ログイン" />
+			</form>
+			</div>
+        </div>
+	</body>
+</html>

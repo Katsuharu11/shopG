@@ -42,7 +42,7 @@ class UserCreateForm(forms.Form):
 
 
 class UserLoginForm(forms.Form):
-    user_id = forms.CharField(label="e-mail", max_length=128, widget=forms.TextInput(attrs={"class": "form-control"}))
+    user_id = forms.CharField(label="会員ID", max_length=128, widget=forms.TextInput(attrs={"class": "form-control"}))
     password = forms.CharField(label="パスワード", max_length=256, widget=forms.PasswordInput(render_value=True, attrs={"class": "form-control"}))
 
     

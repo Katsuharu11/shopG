@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.views.generic import View
 from smartshop.models import Item,Category,User
 from smartshop.forms import UserCreateForm
-# from smartshop.forms import UserLoginForm
+from smartshop.forms import UserLoginForm
 
 def index(request):
     return render(request, "smartshop/main.html")
@@ -171,3 +171,22 @@ class UserCommit(View):
         }
 
         return render(request, "smartshop/registUserCommit.html",context)
+    
+class login(View):
+
+    def get(self, request, *args, **kwargs):
+        form = UserLoginForm()
+        context = {
+            "form": form,
+        }
+        return render(request, "smartshop/login.html", context)
+
+    
+
+    def post(self, request, *args, **kwargs):
+        form = UserLoginForm(request.POST)
+        if not form.is_valid():  # バリデーション実施、問題があった場合の処理
+            context = {
+                "form": form,
+            }
+        return redirect("smartshop:search")
