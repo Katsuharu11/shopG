@@ -1,0 +1,31 @@
+{% load static %}
+<html>
+	<head>
+		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+		<title>会員登録</title>
+		<link rel='stylesheet' type='text/css' href='{% static "insta/css/style.css" %}' />
+	</head>
+	<body>
+        <div class="content">
+			<h3>会員情報を入力してください</h3>
+			<div class="form">
+            <form action="{% url 'smartshop:registerUserConfirm'%}" method='POST'>
+                {% csrf_token %}
+				{% for field in form %}
+                <div>
+					{{ field.label }}
+                	{{ field }}
+                    {# --- 入力フィールドごとのエラーメッセージ（最初のエラーのみを表示） --- #}
+                    {% if field.errors %}
+                    	<p class="error">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+				{% endfor %}
+
+                <input type="submit" value="登録確認" />
+			</form>
+			</div>
+        </div>
+        <a href="{% url 'smartshop:search' %}">商品検索へ</a><br>
+	</body>
+</html>
