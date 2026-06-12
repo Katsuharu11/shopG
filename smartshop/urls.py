@@ -4,9 +4,9 @@ from . import views
 app_name = "smartshop"
 
 urlpatterns = [
-    path("", views.index),
-    path("searchResult/", views.index, name="search_result"),
-    path("itemDetail/", views.index, name="item_detail"),
+    path("", views.index,name="search"),
+    path("searchResult/", views.searchResult.as_view(), name="search_result"),
+    path("itemDetail/<str:pk>/", views.itemDetail.as_view(), name="item_detail"),
     path("cart/", views.index, name="cart"),
     path("login/", views.index, name="login"),
     path("registerUserConfirm/", views.index, name="registerUserConfirm"),

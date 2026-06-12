@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+    <title>商品詳細</title>
+    <link rel='stylesheet' type='text/css' href='{% static "insta/css/style.css" %}' />
+</head>
+
+<body>
+    <h2>商品の詳細表示</h2>
+
+
+    <table>
+    <tr>
+        <td>商品名</td>
+        <td>{{ items.name }}</td>
+    </tr>
+
+    <tr>
+        <td>商品の色</td>
+        <td>{{ items.color }}</td>
+    </tr>
+
+    <tr>
+        <td>メーカー名</td>
+        <td>{{ items.manufacturer }}</td>
+        
+    </tr>
+
+    <tr>
+        <td>価格</td>
+        <td>{{ items.price }}</td>
+    </tr>
+
+    <tr>
+        <td>在庫数</td>
+        <td>{{ items.stock }}</td>
+    </tr>
+
+	</table>
+
+    <form action="{% url 'smartshop:cart' %}" method="post">
+        {% csrf_token %}
+        数量：<select name="amount">
+        {% for i in stock_list %}
+        <option value="{{i}}">{{i}}</option>
+        {% endfor %}
+
+        </select>
+        <input type="submit" value="ショッピングカートに入れる">
+
+    </form>
+   
+   
+    <a href="{% url 'smartshop:search' %}">商品検索へ</a><br>
+
+</body>
+
+</html>
