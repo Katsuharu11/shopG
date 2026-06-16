@@ -1,0 +1,56 @@
+{% load static %}
+<html>
+	<head>
+		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+		<title>会員登録の確認</title>
+		<link rel='stylesheet' type='text/css' href='{% static "insta/css/style.css" %}' />
+	</head>
+
+	<body>
+		<div class="content">
+			<h3>以下の会員情報で更新しますか？</h3>
+	
+			<table>
+				<tr>
+					<td>会員ID</td>
+					<td>{{ user.user_id }}</td>
+				</tr>
+	
+				<tr>
+					<td>パスワード</td>
+					<td>{{ new_password }}</td>
+				</tr>
+	
+				<tr>
+					<td>お名前</td>
+					<td>{{ user.name }}</td>
+				</tr>
+	
+				<tr>
+					<td>ご住所</td>
+					<td>{{ user.address }}</td>
+				</tr>
+	
+				<tr>
+					<td colspan="2">
+						<form action="{% url 'smartshop:updateUserCommit'%}" method='POST'>
+							{% csrf_token %}
+	
+							<!-- hiddenで送信 -->
+							<input type="hidden" name="user_id" value="{{ user.user_id }}">
+							<input type="hidden" name="password" value="{{ new_password }}">
+							<input type="hidden" name="name" value="{{ user.name }}">
+							<input type="hidden" name="address" value="{{ user.address }}">
+	
+							<input type="submit" value="変更" />
+						</form>
+					</td>
+				</tr>
+	
+			</table>
+		</div>
+	
+		<a href="{% url 'smartshop:search' %}">商品検索へ</a><br>
+	</body>
+	
+</html>

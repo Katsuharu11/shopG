@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <h2>sショッピングカート内の商品一覧</h2>
+    <h2>ショッピングカート内の商品一覧</h2>
 
     <table>
 		<tr>
@@ -19,23 +19,32 @@
             <td>単価</td>
             <td>数量</td>
 		</tr>
+   
 
-        {% if items %}
-        {% for item in items %}
+    {% if user_cart %}
+        {% for cart in user_cart %}
         <tr>
-            <td>{{ item.name }}</td>
-            <td>{{ item.color }}</td>
-            <td>{{ item.manufacturer }}</td>
-            <td>{{ item.price }}</td>
-            <td>{{ item.price }}</td>
+            <td>{{ cart.item.name }}</td>
+            <td>{{ cart.item.color }}</td>
+            <td>{{ cart.item.manufacturer }}</td>
+            <td>{{ cart.item.price }}</td>
+            <td>{{ cart.amount }}</td>
         </tr>
         {% endfor %}
+    </table>
+        <p>合計{{total_price}}円</p>
+
+
+        <form action="{% url 'smartshop:search' %}" method="post">
+            {% csrf_token %}
+
+            <input type="submit" value="購入する"><br>
+
     {% else %}
-        <tr>
-            <td colspan="4">条件に合うものは見つかりませんでした。</td>
-        </tr>
-    {% endif %}    
-	</table>
+        カートに商品がありません
+    {% endif %}
+     
+
    
    
         <a href="{% url 'smartshop:search' %}">商品検索へ</a><br>

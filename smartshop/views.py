@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.views.generic import View
-from smartshop.models import Item,Category,User
+from smartshop.models import Item,Category,User,ShoppingCart
 from smartshop.forms import UserCreateForm
 from smartshop.forms import UserLoginForm
+from smartshop.forms import UserUpdateForm
 
 def index(request):
     return render(request, "smartshop/main.html")
@@ -89,15 +90,58 @@ class itemDetail(View):
         return render(request, "smartshop/itemDetail.html", context)
 
 class cart(View):
-    def post(self, request, *args, **kwargs):
-        buy_amount=int(request.POST.get('amount'))
-        item_id=int(request.POST.get("items_id"))
-        queryset = Item.objects.get(item_id=item_id)
+    def get(self, request, *args, **kwargs):
+        if "user_id" not in request.session:
+            return redirect("smartshop:login")
+
+        user_id=request.session["user_id"]
+        user_cart=ShoppingCart.objects.filter(user_id=user_id)
+        total_price = 0
+        for cart in user_cart:
+            total_price += cart.item.price * cart.amount
+
+
         context = {
-            "items": queryset,
-            "amount":buy_amount,
-            }
+            "user_cart":user_cart,
+            "total_price":total_price,
+        }
         return render(request, "smartshop/cart.html", context)
+    
+    def post(self, request, *args, **kwargs):
+        if "user_id" not in request.session:
+            return redirect("smartshop:login")
+
+
+        cart = ShoppingCart()
+        buy_amount = int(request.POST.get('amount'))
+        item_id = int(request.POST.get("item_id"))
+
+
+        
+        user_id=request.session["user_id"]
+        user=User.objects.get(user_id=user_id)
+        item=Item.objects.get(item_id=item_id)
+
+        cart.amount=buy_amount
+        cart.item =item
+        cart.user= user
+        cart.save()
+        
+    
+        user_cart=ShoppingCart.objects.filter(user=user)
+
+        total_price = 0
+        for cart in user_cart:
+            total_price += cart.item.price * cart.amount
+
+
+        context = {
+            "user_cart":user_cart,
+            "total_price":total_price,
+        }
+        return render(request, "smartshop/cart.html", context)
+    
+
     
 class UserCreate(View):
 
@@ -111,12 +155,7 @@ class UserCreate(View):
     
 
     def post(self, request, *args, **kwargs):
-        #入力したものの検証
-        #OKならUserConfirmに値を渡す
-        pass
-        # new_user.save()
-        # # department_listビューの呼び出し
-        # return render(request, "smartshop/registUser.html", context)
+       pass
   
 class UserConfirm(View):
 
@@ -185,8 +224,133 @@ class login(View):
 
     def post(self, request, *args, **kwargs):
         form = UserLoginForm(request.POST)
-        if not form.is_valid():  # バリデーション実施、問題があった場合の処理
+        if form.is_valid():
+            user_id = form.cleaned_data["user_id"]
+            user = User.objects.get(user_id=user_id)
+            name=user.name
+            request.session["name"] = name
+            request.session["user_id"] = user_id
+
+            return redirect("smartshop:search")
+        context = {
+            "form": form,
+            }
+        return render(request, "smartshop/login.html", context)
+    
+class logout(View):
+
+    def get(self, request, *args, **kwargs):
+        request.session.flush()
+        return redirect("smartshop:login")
+
+    
+
+    def post(self, request, *args, **kwargs):
+       pass
+
+class UserInfo(View):
+
+    def get(self, request, *args, **kwargs):
+        user_id= request.session["user_id"]
+        user = User.objects.get(user_id=user_id)
+        context = {
+            "user": user,
+            }
+        return render(request, "smartshop/userInfo.html", context)
+
+
+    def post(self, request, *args, **kwargs):
+        pass
+
+class updateUser(View):
+
+    def get(self, request, *args, **kwargs):
+        form = UserUpdateForm()
+        user_id= request.session["user_id"]
+        user = User.objects.get(user_id=user_id)
+        context = {
+            "form": form,
+            "user": user,
+        }
+        return render(request, "smartshop/updateUser.html", context)
+    
+class updateUserConfirm(View):
+
+    def get(self, request, *args, **kwargs):
+        pass
+
+    def post(self, request, *args, **kwargs):
+        form = UserUpdateForm(request.POST)
+
+        user_id = request.session["user_id"]
+        user = User.objects.get(user_id=user_id)
+
+        if not form.is_valid():
             context = {
                 "form": form,
+                "user": user,
             }
-        return redirect("smartshop:search")
+            return render(request, "smartshop/updateUser.html", context)
+
+        new_password = form.cleaned_data.get("password")
+
+        context = {
+            "user": user,
+            "new_password": new_password,
+        }
+
+        return render(request, "smartshop/updateUserConfirm.html", context)
+    
+class updateUserCommit(View):
+
+    def get(self, request, *args, **kwargs):
+        pass
+
+    def post(self, request, *args, **kwargs):
+        new_user = User()
+
+        new_user.password = request.POST.get("password")
+        new_user.name = request.POST.get("name")
+        new_user.user_id = request.POST.get("user_id")
+        new_user.address = request.POST.get("address")
+        new_user.save()
+
+        context={
+            "user":new_user
+        }
+
+        return render(request, "smartshop/updateUserCommit.html",context)
+    
+class withdrawConfirm(View):
+
+    def get(self, request, *args, **kwargs):
+        name=request.session["name"]
+
+        context={
+            "name":name
+        }
+
+        return render(request, "smartshop/withdrawConfirm.html",context)
+
+    def post(self, request, *args, **kwargs):
+        pass
+    
+class withdrawCommit(View):
+
+    def get(self, request, *args, **kwargs):
+        pass
+
+    def post(self, request, *args, **kwargs):
+        user_id = request.session["user_id"]
+        name=request.session["name"]
+        user = User.objects.get(user_id=user_id)
+        user.delete()
+        request.session.flush()
+
+        context={
+            "name":name
+        }
+
+        return render(request, "smartshop/withdrawCommit.html",context)
+
+

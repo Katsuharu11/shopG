@@ -1,0 +1,17 @@
+{% load static %}
+<html>
+	<head>
+		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+		<title>退会確認画面</title>
+		<link rel='stylesheet' type='text/css' href='{% static "insta/css/style.css" %}' />
+	</head>
+	<body>
+        <div class="content">
+			<h3>{{name}}さん、本当に退会しますか？</h3>
+			
+			<form action="{% url 'smartshop:withdrawCommit'%}" method='POST'>
+				{% csrf_token %}
+				<input type="submit" value="退会" /><br>
+		<a href="{% url 'smartshop:search' %}">商品検索へ</a><br>
+	</body>
+</html>

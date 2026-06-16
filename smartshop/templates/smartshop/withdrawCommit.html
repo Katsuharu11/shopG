@@ -1,0 +1,15 @@
+{% load static %}
+<html>
+	<head>
+		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+		<title>退会完了</title>
+		<link rel='stylesheet' type='text/css' href='{% static "insta/css/style.css" %}' />
+	</head>
+	<body>
+        <div class="content">
+			<h3>{{name}}さん、退会処理を完了しました</h3><br>
+			<h3>またのご利用お待ちしております</h3><br>
+			
+		<a href="{% url 'smartshop:login' %}">ログイン画面へ</a><br>
+	</body>
+</html>

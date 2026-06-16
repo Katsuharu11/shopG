@@ -59,3 +59,24 @@ class UserLoginForm(forms.Form):
 
     
 
+class UserUpdateForm(forms.Form):
+    password = forms.CharField(label="パスワード", max_length=256,widget=forms.PasswordInput(render_value=True, attrs={"class": "form-control"}))
+    confirm_password = forms.CharField(label="パスワード（確認）",widget=forms.PasswordInput(render_value=True, attrs={"class": "form-control"}))
+
+    def clean_password(self):
+        value = self.cleaned_data["password"]
+        return value
+
+    
+    
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        if password and confirm_password:
+            if password != confirm_password:
+                raise forms.ValidationError("パスワードが一致しません")
+
+        return cleaned_data

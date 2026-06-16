@@ -15,10 +15,6 @@
                 <div>
 					{{ field.label }}
                 	{{ field }}
-                    {# --- 入力フィールドごとのエラーメッセージ（最初のエラーのみを表示） --- #}
-                    {% if field.errors %}
-                    	<p class="error">{{ field.errors.0 }}</p>
-                    {% endif %}
                 </div>
 				{% endfor %}
 
@@ -26,6 +22,6 @@
 			</form>
 			</div>
         </div>
-        <a href="{% url 'smartshop:search' %}">商品検索へ</a><br>
+		<a href="{% url 'smartshop:search' %}">商品検索へ</a><br>
 	</body>
 </html>

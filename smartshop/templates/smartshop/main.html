@@ -23,9 +23,20 @@
     </form>
         <a href="{% url 'smartshop:cart' %}">ショッピングカートを見る</a><br>
         <a href="{% url 'smartshop:cart' %}">購入履歴（任意機能）</a><br>
+        {% if request.session.user_id %}
+        <p>ようこそ {{ request.session.name }} さん</p>
+        {% endif %}
+
+        {% if not request.session.user_id %}
         <a href="{% url 'smartshop:login' %}">ログイン</a><br>
+        {% endif %}
+        {% if request.session.user_id %}
+        <a href="{% url 'smartshop:updateUser' %}">会員情報の変更</a><br>
+        <a href="{% url 'smartshop:userInfo' %}">会員情報の確認</a><br>
+        <a href="{% url 'smartshop:logout' %}">ログアウト</a><br>
+        {% endif %}
         <a href="{% url 'smartshop:login' %}">管理者ページ</a><br>
-        <a href="{% url 'smartshop:registerUser' %}">会員登録</a><br>
+        
 
 </body>
 

@@ -43,7 +43,7 @@
 
     <form action="{% url 'smartshop:cart' %}" method="post">
         {% csrf_token %}
-        <input type="hidden" name="item_id" value="{{ items.id }}">
+        <input type="hidden" name="item_id" value="{{ items.item_id }}">
         数量：<select name="amount">
         {% for i in stock_list %}
         <option value="{{i}}">{{i}}</option>
